@@ -1,0 +1,9 @@
+[package]
+name = "konva"
+version = "0.1.0"
+edition = "2021"
+include = ["src/**/*", "Cargo.toml", "LICENSE", "README.md", "examples"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
