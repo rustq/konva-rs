@@ -1,7 +1,4 @@
-// pub mod node;
-
-
-pub trait Container {
+pub trait Container<ChildType> {
 
 }
 
