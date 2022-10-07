@@ -12,9 +12,10 @@ use wasm_bindgen::prelude::*;
 
 
 
-#[derive(Debug)]
+// #[derive(Debug)]
 pub struct Stage {
-    content: web_sys::HtmlElement
+    content: web_sys::HtmlElement,
+    pub _children: Vec<layer::Layer>
 }
 
 // #[wasm_bindgen]
@@ -35,12 +36,21 @@ impl Stage {
         div.set_attribute("style", "position: relative; user-select: none;");
         div.set_attribute("class", "konva-rs-content");
         container.append_child(&div);
-        Stage{ content: div }
+        Stage{ content: div, _children: Vec::new() }
     }
 
-    pub fn add(&self, _layer: layer::Layer) {
+    pub fn add(&mut self, _layer: layer::Layer) {
 		let content = &self.content;
         content.append_child(&_layer._canvas.native_element);
+        self._children.push(_layer);
+    }
+
+
+    pub fn batch_draw(&self) {
+        for i in 0..self._children.len() {
+            let layer = &self._children[i];
+            layer.draw();
+        }
     }
 }
 

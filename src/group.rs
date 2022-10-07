@@ -1,10 +1,10 @@
 use crate::container;
-use crate::shape;
+use crate::rect;
 
 pub struct Group {
 
 }
 
-impl container::Container<shape::Shape> for Group {
+impl container::Container<rect::Rect> for Group {
     
 }

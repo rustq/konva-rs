@@ -10,7 +10,7 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 
 pub struct Canvas {
-    pub native_element: web_sys::HtmlElement
+    pub native_element: web_sys::HtmlCanvasElement
 }
 
 
@@ -21,7 +21,7 @@ impl Canvas {
 		let document = window.document().expect("expecting a document on window");
         let canvas = document.create_element("canvas")
         .unwrap()
-        .dyn_into::<web_sys::HtmlElement>()
+        .dyn_into::<web_sys::HtmlCanvasElement>()
         .unwrap();
         Canvas{
             native_element: canvas

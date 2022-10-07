@@ -1,9 +1,5 @@
 use crate::node;
 
-pub struct Shape {
+pub trait Shape: node::Node {
 
-}
-
-impl node::Node for Shape {
-    
 }
