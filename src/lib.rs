@@ -36,7 +36,9 @@ pub fn play() -> Result<(), JsValue> {
     layer1.add(shape1);
     layer1.add(shape2);
     let shape3 = rect::Rect::new(50.0, 20.0, 30.0, 100.0);
+    let shape4 = rect::Rect::new(40.0, 30.0, 100.0, 10.0);
     layer2.add(shape3);
+    layer2.add(shape4);
     s1.add(layer1);
     s1.add(layer2);
     s1.batch_draw();

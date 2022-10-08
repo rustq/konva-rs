@@ -26,10 +26,10 @@ impl Layer {
             .get_context("2d")?
             .unwrap()
             .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
-        let context = Rc::new(context);
+        let context: Rc<web_sys::CanvasRenderingContext2d> = Rc::new(context);
         for i in 0..self._children.len() {
             let rect = &self._children[i];
-            context.fill_rect(rect.x, rect.y, rect.width, rect.height);
+            rect.draw(&context)
         }
         Ok(())
     }
