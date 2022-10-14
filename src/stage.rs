@@ -41,7 +41,7 @@ impl Stage {
 
     pub fn add(&mut self, _layer: layer::Layer) {
 		let content = &self.content;
-        content.append_child(&_layer._canvas.native_element);
+        content.append_child(&_layer._glue._canvas);
         self._children.push(_layer);
     }
 

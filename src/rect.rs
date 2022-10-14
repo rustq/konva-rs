@@ -1,3 +1,6 @@
+use crate::glue::browser::Transaction2D;
+use crate::glue::browser::Transaction2DParam;
+use crate::glue::browser::Transaction2DMethod;
 use crate::node;
 use crate::shape;
 use std::rc::Rc;
@@ -22,7 +25,7 @@ impl Rect {
         Rect { x, y, width, height }
     }
 
-    pub fn draw(&self, context: &Rc<web_sys::CanvasRenderingContext2d>) {
-        context.fill_rect(self.x, self.y, self.width, self.height);
+    pub fn draw(&self, mut transactions: &mut Vec<Box<Transaction2D>>) -> () {
+        transactions.push(Box::new(Transaction2D{ method: Transaction2DMethod::fill_rect, param: Transaction2DParam{ x: self.x, y: self.y, width: self.width, height: self.height } }));
     }
 }

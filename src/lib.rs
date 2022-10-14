@@ -6,6 +6,7 @@ pub mod rect;
 pub mod container;
 pub mod node;
 pub mod canvas;
+pub mod glue;
 
 extern crate wasm_bindgen;
 
