@@ -4,7 +4,6 @@ use crate::context;
 use crate::glue;
 use crate::group;
 use crate::rect;
-use wasm_bindgen::prelude::*;
 
 pub struct Layer {
     pub _children: Vec<rect::Rect>,
@@ -26,14 +25,13 @@ impl Layer {
         self._children.push(_shape);
     }
 
-    pub fn draw(&self) -> Result<(), JsValue> {
+    pub fn draw(&self) {
         let ctx = &mut context::Context::new();
         for i in 0..self._children.len() {
             let rect = &self._children[i];
             rect.draw(ctx);
         }
         self._glue.output_transaction_2ds(ctx);
-        Ok(())
     }
 }
 
