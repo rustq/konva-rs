@@ -1,15 +1,7 @@
 use crate::container;
 use crate::layer;
-extern crate wasm_bindgen;
 
-extern crate web_sys;
-
-use std::cell::Cell;
-use std::rc::Rc;
 use wasm_bindgen::JsCast;
-
-use wasm_bindgen::prelude::*;
-
 
 
 // #[derive(Debug)]
@@ -29,7 +21,7 @@ impl Stage {
             .unwrap()
             .dyn_into::<web_sys::HtmlElement>()
             .unwrap();
-            container.set_inner_html("QQQQ");
+        container.set_inner_html("Hello Stage");
         let div = document.create_element("div").unwrap()
             .dyn_into::<web_sys::HtmlElement>()
             .unwrap();
@@ -41,10 +33,10 @@ impl Stage {
 
     pub fn add(&mut self, _layer: layer::Layer) {
 		let content = &self.content;
-        content.append_child(&_layer._glue._canvas);
+        _layer._glue.html_canvas.set_attribute("style", "position: absolute;");
+        content.append_child(&_layer._glue.html_canvas);
         self._children.push(_layer);
     }
-
 
     pub fn batch_draw(&self) {
         for i in 0..self._children.len() {
