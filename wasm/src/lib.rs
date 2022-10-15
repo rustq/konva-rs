@@ -1,14 +1,14 @@
 extern crate konva;
 extern crate wasm_bindgen;
 
+use konva::*;
 use std::cell::Cell;
 use std::rc::Rc;
-use wasm_bindgen::JsCast;
-use konva::*;
 use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 
 #[wasm_bindgen]
-extern {
+extern "C" {
     pub fn alert(s: &str);
 }
 
@@ -16,7 +16,6 @@ extern {
 pub fn greet() {
     alert("Hello!!!!");
 }
-
 
 #[wasm_bindgen]
 pub fn play() -> Result<(), JsValue> {

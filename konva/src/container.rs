@@ -1,4 +1,1 @@
-pub trait Container<ChildType> {
-
-}
-
+pub trait Container<ChildType> {}

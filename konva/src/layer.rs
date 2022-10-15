@@ -1,9 +1,9 @@
+use crate::canvas;
 use crate::container;
+use crate::context;
+use crate::glue;
 use crate::group;
 use crate::rect;
-use crate::canvas;
-use crate::glue;
-use crate::context;
 use wasm_bindgen::prelude::*;
 
 pub struct Layer {
@@ -14,12 +14,16 @@ pub struct Layer {
 impl Layer {
     pub fn new() -> Self {
         let canvas = canvas::Canvas::new();
-        Layer { _glue: glue::browser::BrowserGlue{ html_canvas: canvas.native_element }, _children: Vec::new() }
+        Layer {
+            _glue: glue::browser::BrowserGlue {
+                html_canvas: canvas.native_element,
+            },
+            _children: Vec::new(),
+        }
     }
 
-
     pub fn add(&mut self, _shape: rect::Rect) {
-		self._children.push(_shape);
+        self._children.push(_shape);
     }
 
     pub fn draw(&self) -> Result<(), JsValue> {
@@ -33,6 +37,4 @@ impl Layer {
     }
 }
 
-impl container::Container<group::Group> for Layer {
-    
-}
+impl container::Container<group::Group> for Layer {}

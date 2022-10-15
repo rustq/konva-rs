@@ -1,5 +1,3 @@
 use crate::node;
 
-pub trait Shape: node::Node {
-
-}
+pub trait Shape: node::Node {}
