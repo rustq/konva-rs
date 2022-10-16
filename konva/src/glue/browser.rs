@@ -1,5 +1,8 @@
 use crate::context;
+use crate::stage;
 use std::rc::Rc;
+use std::rc::Weak;
+use std::cell::RefCell;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -43,6 +46,35 @@ impl BrowserGlue {
         canvas
     }
 
+    // pub fn listen(event_name: String, listener: Box<dyn FnMut(i32) -> i32>) -> Result<(), JsValue> {
+
+    //     let cb = Closure::wrap(Box::new(|e: web_sys::Event| {
+    //         // exec(listener);
+    //     }) as Box<dyn FnMut(web_sys::Event)>);
+    //     // exec(listener);
+        
+    //     let window = web_sys::window().expect("global window does not exists");
+    //     let document = window.document().expect("expecting a document on window");
+    //     document.add_event_listener_with_callback(event_name.as_str(), &cb.as_ref().unchecked_ref())?;
+        
+    //     cb.forget();
+    //     Ok(())
+    // }
+
+    pub fn listen(event_name: String, st: &mut stage::Stage) -> Result<(), JsValue> {
+
+        let cb = Closure::wrap(Box::new(|e: web_sys::Event| {
+            // st.batch_fire(); // ERROR
+        }) as Box<dyn FnMut(web_sys::Event) + 'static>);
+        st.batch_fire();
+        let window = web_sys::window().expect("global window does not exists");
+        let document = window.document().expect("expecting a document on window");
+        document.add_event_listener_with_callback(event_name.as_str(), cb.as_ref().unchecked_ref())?;
+        
+        cb.forget();
+        Ok(())
+    }
+
     pub fn append_canvas_to_content_div(canvas_element: &web_sys::HtmlCanvasElement, div_element: &web_sys::HtmlElement) {
         canvas_element.set_attribute("style", "position: absolute;");
         div_element.append_child(&canvas_element);
@@ -79,4 +111,16 @@ impl BrowserGlue {
     pub fn output_events(events: Vec<ListenerEvent>) {}
 
     pub fn input_trigger(trigger: Trigger) {}
+}
+
+fn exec<F: FnOnce(i32) -> i32>(f: F)  { // Fn 也可以传到 FnOnce 类型
+    f(3); // 调用的是 Fn，所有权不会转移
+}
+
+fn exec1<F: FnOnce(i32) -> i32>(mut f: F)  { // Fn 也可以传到 FnMut 类型
+    f(3);
+}
+
+fn exec2<F: FnMut(i32) -> i32>(mut f: F)  {
+    (f)(3);
 }
