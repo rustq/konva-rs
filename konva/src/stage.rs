@@ -35,7 +35,7 @@ impl<'a,'b:'a> Stage {
         }
     }
 
-    pub fn listen(&mut self) {
+    pub fn listen(&'static mut self) {
         glue::browser::BrowserGlue::listen("click".to_string(), self);
     }
 

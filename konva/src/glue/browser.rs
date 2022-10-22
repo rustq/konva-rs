@@ -46,10 +46,10 @@ impl BrowserGlue {
         canvas
     }
 
-    // pub fn listen(event_name: String, listener: Box<dyn FnMut(i32) -> i32>) -> Result<(), JsValue> {
+    // pub fn listen(event_name: String, listener: &'static mut dyn FnMut(i32) -> i32) -> Result<(), JsValue> {
 
     //     let cb = Closure::wrap(Box::new(|e: web_sys::Event| {
-    //         // exec(listener);
+    //         exec(Box::leak(Box::new(listener)));
     //     }) as Box<dyn FnMut(web_sys::Event)>);
     //     // exec(listener);
         
@@ -61,12 +61,12 @@ impl BrowserGlue {
     //     Ok(())
     // }
 
-    pub fn listen(event_name: String, st: &mut stage::Stage) -> Result<(), JsValue> {
-
+    pub fn listen(event_name: String, st: &'static mut stage::Stage) -> Result<(), JsValue> {
+        let sst = Box::leak(Box::new(RefCell::new(st)));
         let cb = Closure::wrap(Box::new(|e: web_sys::Event| {
-            // st.batch_fire(); // ERROR
+            sst.borrow_mut().batch_fire(); // ERROR
         }) as Box<dyn FnMut(web_sys::Event) + 'static>);
-        st.batch_fire();
+        // sst.borrow_mut().batch_fire();
         let window = web_sys::window().expect("global window does not exists");
         let document = window.document().expect("expecting a document on window");
         document.add_event_listener_with_callback(event_name.as_str(), cb.as_ref().unchecked_ref())?;

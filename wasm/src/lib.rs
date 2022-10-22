@@ -85,7 +85,7 @@ pub fn play() -> Result<(), JsValue> {
 
     layer2.add(shape5);
 
-    let mut s1 = stage::Stage::new();
+    let mut s1 = Box::leak(Box::new(stage::Stage::new()));
     s1.add(layer1);
     s1.add(layer2);
     s1.batch_draw();
