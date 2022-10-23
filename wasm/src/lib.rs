@@ -78,7 +78,7 @@ pub fn play() -> Result<(), JsValue> {
         let shape6 = rect::Rect::new(40.0, 80.0, 10.0, 10.0, "pink".to_string());
         layer3.add(shape6);
         s2.add(layer3);
-        s2.batch_draw();
+        s2.batch_draw(); // s1
         3
     }));
 

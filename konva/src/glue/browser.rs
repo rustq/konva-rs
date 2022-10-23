@@ -1,5 +1,7 @@
 use crate::context;
 use crate::stage;
+use crate::layer;
+use crate::rect;
 use std::rc::Rc;
 use std::rc::Weak;
 use std::cell::RefCell;
@@ -64,7 +66,12 @@ impl BrowserGlue {
     pub fn listen(event_name: String, st: &'static mut stage::Stage) -> Result<(), JsValue> {
         let sst = Box::leak(Box::new(RefCell::new(st)));
         let cb = Closure::wrap(Box::new(|e: web_sys::Event| {
-            sst.borrow_mut().batch_fire(); // ERROR
+            sst.borrow_mut().batch_fire();
+            let mut layer3 = layer::Layer::new();
+            let shape6 = rect::Rect::new(50.0, 90.0, 35.0, 15.0, "yellow".to_string());
+            layer3.add(shape6);
+            sst.borrow_mut().add(layer3);
+            sst.borrow_mut().batch_draw();
         }) as Box<dyn FnMut(web_sys::Event) + 'static>);
         // sst.borrow_mut().batch_fire();
         let window = web_sys::window().expect("global window does not exists");
