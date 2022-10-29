@@ -2,6 +2,7 @@ use crate::context;
 use crate::stage;
 use crate::layer;
 use crate::rect;
+use crate::stage::Stage;
 use std::rc::Rc;
 use std::rc::Weak;
 use std::cell::RefCell;
@@ -54,30 +55,30 @@ impl BrowserGlue {
     //         exec(Box::leak(Box::new(listener)));
     //     }) as Box<dyn FnMut(web_sys::Event)>);
     //     // exec(listener);
-        
+
     //     let window = web_sys::window().expect("global window does not exists");
     //     let document = window.document().expect("expecting a document on window");
     //     document.add_event_listener_with_callback(event_name.as_str(), &cb.as_ref().unchecked_ref())?;
-        
+
     //     cb.forget();
     //     Ok(())
     // }
 
-    pub fn listen(event_name: String, st: &'static mut stage::Stage) -> Result<(), JsValue> {
-        let sst = Box::leak(Box::new(RefCell::new(st)));
-        let cb = Closure::wrap(Box::new(|e: web_sys::Event| {
-            sst.borrow_mut().batch_fire();
+    pub fn listen(event_name: String, st: Rc<RefCell<stage::Stage>>) -> Result<(), JsValue> {
+        let cb = Closure::wrap(Box::new(move |_: web_sys::Event| {
+            let sst = Rc::clone(&st);
+            Stage::batch_fire(&sst.borrow());
             let mut layer3 = layer::Layer::new();
             let shape6 = rect::Rect::new(50.0, 90.0, 35.0, 15.0, "yellow".to_string());
             layer3.add(shape6);
             sst.borrow_mut().add(layer3);
-            sst.borrow_mut().batch_draw();
-        }) as Box<dyn FnMut(web_sys::Event) + 'static>);
-        // sst.borrow_mut().batch_fire();
+            sst.borrow().batch_draw();
+        }) as Box<dyn FnMut(_)>);
+        // st.borrow_mut().batch_fire();
         let window = web_sys::window().expect("global window does not exists");
         let document = window.document().expect("expecting a document on window");
         document.add_event_listener_with_callback(event_name.as_str(), cb.as_ref().unchecked_ref())?;
-        
+
         cb.forget();
         Ok(())
     }

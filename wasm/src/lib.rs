@@ -2,6 +2,7 @@ extern crate konva;
 extern crate wasm_bindgen;
 
 use konva::*;
+use konva::stage::Stage;
 use std::cell::Cell;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -63,6 +64,7 @@ pub fn play() -> Result<(), JsValue> {
     // let mut shape5 = rect::Rect::new(40.0, 80.0, 10.0, 10.0, "yellow".to_string());
     // shape5.on_click(on_shape5_click);
     // s1.listen();
+    let stage = Rc::new(RefCell::new(stage::Stage::new()));
 
     let mut shape5 = rect::Rect::new(40.0, 80.0, 10.0, 10.0, "cyan".to_string());
     shape5.compose(5,
@@ -72,24 +74,23 @@ pub fn play() -> Result<(), JsValue> {
     shape5.biu3(3);
     shape5.biu3(3);
 
-    shape5.on_click(Box::new(|x: i32| {
-        let mut s2 = stage::Stage::new();
+    let s1 = Rc::clone(&stage);
+    shape5.on_click(Box::new(move |x: i32| {
         let mut layer3 = layer::Layer::new();
         let shape6 = rect::Rect::new(40.0, 80.0, 10.0, 10.0, "pink".to_string());
         layer3.add(shape6);
-        s2.add(layer3);
-        s2.batch_draw(); // s1
+        s1.borrow().batch_draw();
         3
     }));
 
 
     layer2.add(shape5);
 
-    let mut s1 = Box::leak(Box::new(stage::Stage::new()));
-    s1.add(layer1);
-    s1.add(layer2);
-    s1.batch_draw();
+    let s2 = Rc::clone(&stage);
+    s2.borrow_mut().add(layer1);
+    s2.borrow_mut().add(layer2);
+    s2.borrow_mut().batch_draw();
 
-    s1.listen();
+    Stage::listen(Rc::clone(&stage));
     Ok({})
 }

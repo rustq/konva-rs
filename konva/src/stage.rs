@@ -25,18 +25,18 @@ impl<'a,'b:'a> Stage {
         self._children.push(_layer);
     }
 
-    pub fn batch_fire(&mut self) {
-        for i in 0..self._children.len() {
-            let layer = &mut self._children[i];
+    pub fn batch_fire(st: &Stage) {
+        for i in 0..st._children.len() {
+            let layer = &st._children[i];
             for j in 0..layer._children.len() {
-                let shape = &mut layer._children[j];
-                shape.fire();
+                let shape = &layer._children[j];
+                shape.borrow_mut().fire();
             }
         }
     }
 
-    pub fn listen(&'static mut self) {
-        glue::browser::BrowserGlue::listen("click".to_string(), self);
+    pub fn listen(st: Rc<RefCell<Stage>>) {
+        glue::browser::BrowserGlue::listen("click".to_string(), st);
     }
 
     pub fn batch_draw(&self) {

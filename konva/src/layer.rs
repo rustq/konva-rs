@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+
 use crate::canvas;
 use crate::container;
 use crate::context;
@@ -6,7 +8,7 @@ use crate::group;
 use crate::rect;
 
 pub struct Layer {
-    pub _children: Vec<rect::Rect>,
+    pub _children: Vec<RefCell<rect::Rect>>,
     pub _glue: glue::browser::BrowserGlue,
 }
 
@@ -22,14 +24,16 @@ impl Layer {
     }
 
     pub fn add(&mut self, _shape: rect::Rect) {
-        self._children.push(_shape);
+        self._children.push(RefCell::new(_shape));
     }
 
     pub fn draw(&self) {
         let ctx = &mut context::Context::new();
         for i in 0..self._children.len() {
             let rect = &self._children[i];
-            rect.draw(ctx);
+            if let Ok(rec) = rect.try_borrow() {
+                rec.draw(ctx);
+            }
         }
         self._glue.output_transaction_2ds(ctx);
     }
